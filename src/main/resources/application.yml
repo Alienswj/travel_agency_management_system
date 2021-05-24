@@ -1,0 +1,91 @@
+spring:
+  profiles:
+    active: dev
+---
+server:
+  port: 8099
+spring:
+  profiles: dev
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 1356
+    url: jdbc:mysql://localhost:3307/travel_agency_management_system?useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.jdbc.Driver
+    #Spring Boot默认是不注入这些属性值的,需要自己绑定
+    druid:
+      #druid数据源专有配置
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedstatements: true
+      #配置监控统计拦截的filters,stat监控统计、Logback:日志记录、wall:防御sql注入
+      filters: stat, slf4j
+      useGlobalDataSourceStat: true
+      connectionProperties: druid.stat.mergeSql=true; druid.stat.slowSqlMillis=500
+      stat-view-servlet:
+        login-username: admin
+        login-password: admin
+        enabled: true
+      filter:
+        commons-log:
+          statement-log-enabled: true
+          statement-executable-sql-log-enable: true
+        wall:
+          config:
+            multi-statement-allow: true
+      default-auto-commit: on
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd
+  #send_email
+  mail:
+    protocol: smtp
+    host: smtp.qq.com
+    port: 587
+    username: 173316449@qq.com
+    password: kvtdkfryjiaabjid
+    test-connection: false
+    properties:
+      from: 173316449@qq.com
+      mail:
+        smtp:
+          auth: false
+        debug: false
+        mime:
+          splitlongparameters: false
+    default-encoding: UTF-8
+
+# mybatis
+mybatis-plus:
+  typeAliasesPackage: cn.edu.cuit.mapperocations
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:cn/edu/cuit/mapper/*.xml #用于指定xml文件地址
+  global-config:
+    db-config:
+      logic-delete-field: status  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+#logging
+logging:
+  #config: classpath:logback-config.xml
+  level:
+    root: info
+
+
+---
+spring:
+  profiles: prod
+
+---
+spring:
+  profiles: test
